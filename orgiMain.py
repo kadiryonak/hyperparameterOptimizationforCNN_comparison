@@ -74,13 +74,13 @@ if __name__ == "__main__":
     # === GA ===
     ga = GeneticSearch(param_space, ds, device, population_size=6, generations=5, mutation_rate=0.30, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
     best_ga, _ = ga.search()
-
+    train_full(best_ga,10)
     # === Grid ===
-    grid = GridSearch(param_space, ds, device, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
-    best_grid, _ = grid.search()
+    #grid = GridSearch(param_space, ds, device, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
+    #best_grid, _ = grid.search()
 
     # === Random ===
-    rand = RandomSearch(param_space, ds, device, n_trials=10, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
-    best_rand, _ = rand.search()
+    #rand = RandomSearch(param_space, ds, device, n_trials=10, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
+    #best_rand, _ = rand.search()
 
     # ===
