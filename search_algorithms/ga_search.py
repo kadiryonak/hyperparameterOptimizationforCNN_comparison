@@ -22,7 +22,7 @@ class GeneticSearch(HyperparameterSearch):
         self.population_size = population_size
         self.generations = generations
         self.mutation_rate = mutation_rate
-        self.fitness_epochs = max(1, fitness_epochs)  # 1→ hızlı fitness, 2-3→ daha stabil
+        self.fitness_epochs = max(2, fitness_epochs) 
         self.balanced = balanced
         self.criterion = nn.CrossEntropyLoss()
 
@@ -39,16 +39,16 @@ class GeneticSearch(HyperparameterSearch):
         return {k: (p1[k] if random.random() < 0.5 else p2[k]) for k in p1.keys()}
 
     def _build_trainer(self, h: dict) -> Trainer:
-        # Dataloader'ları her bireyin batch size'ına göre kur
+        
         train_loader, val_loader, _ = self.dataset_loader.make_loaders(h['batch_size'], balanced=self.balanced, device=self.device)
-        # Model (opsiyonel hparam: bn/dropout)
+
         model = SimpleCNN(num_classes=self.dataset_loader.num_classes, use_bn=h.get('use_bn', False), p_dropout=h.get('dropout', 0.0))
         opt = make_optimizer(h['optimizer'], model.parameters(), h['lr'], weight_decay=h.get('weight_decay', 0.0))
         return Trainer(model, train_loader, val_loader, opt, self.device, self.criterion)
 
     def _evaluate(self, h: dict) -> float:
         trainer = self._build_trainer(h)
-        # Birçok durumda 1 epoch yetmez; 2-3 daha istikrarlı sonuç verir
+        
         acc = trainer.fit(epochs=self.fitness_epochs, verbose=False)
         return acc
 
@@ -70,7 +70,7 @@ class GeneticSearch(HyperparameterSearch):
 
             # elitizm
             new_pop = [scored[0][1].copy(), scored[1][1].copy()]
-            # crossover + mutasyon (ilk 4 içinden)
+            # crossover + mutation
             pool = [h for _, h in scored[:min(4, len(scored))]]
             while len(new_pop) < self.population_size:
                 p1, p2 = random.sample(pool, 2)
