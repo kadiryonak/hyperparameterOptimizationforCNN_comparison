@@ -1,7 +1,3 @@
-
-# ──────────────────────────────────────────────────────────────────────────────
-# file: models/simple_cnn.py
-# ──────────────────────────────────────────────────────────────────────────────
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -15,16 +11,16 @@ class SimpleCNN(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)
         self.drop = nn.Dropout(p_dropout) if p_dropout > 0 else nn.Identity()
 
-        # Dinamik fc boyutu hesapla
+
         with torch.no_grad():
-            x = torch.zeros(1, *input_shape)  # sahte input
+            x = torch.zeros(1, *input_shape) 
             x = self._forward_features(x)
             flattened_size = x.view(1, -1).size(1)
 
         self.fc1 = nn.Linear(flattened_size, 128)
         self.fc2 = nn.Linear(128, num_classes)
 
-        # Kaiming init
+
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
