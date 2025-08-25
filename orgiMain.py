@@ -25,8 +25,8 @@ print("Using device:", device)
 
 # === CONFIG ===
 DATA_DIR = r"C:\\Users\\w\\Desktop\\Kodlama\\VsCode\\HelloWorld\\DroneDetection\\file8_lastversion"
-FITNESS_EPOCHS = 2
-BALANCED_SAMPLING = False
+FITNESS_EPOCHS = 5
+BALANCED_SAMPLING = True
 
 param_space = {
     "lr": [5e-4, 1e-3, 5e-3],
