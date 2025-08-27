@@ -25,7 +25,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
 # === CONFIG ===
-DATA_DIR = r"C:\\Users\\w\\Desktop\\Kodlama\\VsCode\\HelloWorld\\DroneDetection\\file8_lastversion"
+DATA_DIR = r"***\\DroneDetection\\file8_lastversion"
 FITNESS_EPOCHS = 2
 BALANCED_SAMPLING = False
 
