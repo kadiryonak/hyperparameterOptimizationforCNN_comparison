@@ -1,7 +1,44 @@
+import os
+import random
+import math
+import numpy as np
+import copy
+from config import Config
+from search_algorithms.base_search import HyperparameterSearch 
+
+try:
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    import torch.optim as optim
+    from torch.utils.data import DataLoader, random_split, Subset, WeightedRandomSampler
+    from torchvision import datasets, transforms
+    from sklearn.metrics import f1_score
+    from collections import Counter
+    TORCH_AVAILABLE = True
+except Exception:
+    TORCH_AVAILABLE = False
+
 
 # ---------------------------
-# ARTIFICIAL BEE COLONY (ABC)
+# Utility: deterministic seeding
 # ---------------------------
+def set_global_seed(seed: int = 42, deterministic: bool = True):
+    """Set random seeds for reproducibility across python, numpy and torch (if present).
+    deterministic=True will also set some torch backend flags to reduce non-determinism.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    try:
+        import torch
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        if deterministic:
+            torch.backends.cudnn.deterministic = True
+            torch.backends.cudnn.benchmark = False
+    except Exception:
+        pass
+    
 class ABC(HyperparameterSearch):
     """ABC optimizer. fitness_function should return a scalar objective (float) to MINIMIZE."""
     def __init__(self, conf: Config, fitness_function):
@@ -136,3 +173,4 @@ class ABC(HyperparameterSearch):
                 print(f"Cycle {cycle+1}/{max_cycles} - Best objective: {self.globalOpt:.6f}")
             history.append((cycle + 1, self.globalOpt, self.globalParams.copy()))
         return self.globalParams.copy(), self.globalOpt, history
+
