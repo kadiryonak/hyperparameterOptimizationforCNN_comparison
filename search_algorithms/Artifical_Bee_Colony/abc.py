@@ -20,13 +20,8 @@ except Exception:
     TORCH_AVAILABLE = False
 
 
-# ---------------------------
-# Utility: deterministic seeding
-# ---------------------------
 def set_global_seed(seed: int = 42, deterministic: bool = True):
-    """Set random seeds for reproducibility across python, numpy and torch (if present).
-    deterministic=True will also set some torch backend flags to reduce non-determinism.
-    """
+
     random.seed(seed)
     np.random.seed(seed)
     try:
@@ -40,7 +35,6 @@ def set_global_seed(seed: int = 42, deterministic: bool = True):
         pass
     
 class ABC(HyperparameterSearch):
-    """ABC optimizer. fitness_function should return a scalar objective (float) to MINIMIZE."""
     def __init__(self, conf: Config, fitness_function):
         self.conf = conf
         self.fitness_function = fitness_function
@@ -67,7 +61,7 @@ class ABC(HyperparameterSearch):
         try:
             obj = float(self.fitness_function(self.foods[index]))
         except Exception as e:
-            # if fitness function crashes, set large objective so it is treated as bad
+
             print(f"Error evaluating fitness at init (index {index}): {e}")
             obj = float(np.inf)
         self.f[index] = obj
@@ -173,4 +167,5 @@ class ABC(HyperparameterSearch):
                 print(f"Cycle {cycle+1}/{max_cycles} - Best objective: {self.globalOpt:.6f}")
             history.append((cycle + 1, self.globalOpt, self.globalParams.copy()))
         return self.globalParams.copy(), self.globalOpt, history
+
 
