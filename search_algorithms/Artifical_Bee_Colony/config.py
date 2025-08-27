@@ -1,8 +1,5 @@
 import numpy as np
 
-# ---------------------------
-# CONFIG
-# ---------------------------
 class Config:
     def __init__(self):
         # colony size (total bees)
@@ -22,3 +19,4 @@ class Config:
         # NOTE: RANDOM_SEED == False => we set the seed (deterministic). Set to True if you WANT randomness.
         self.RANDOM_SEED = False
         self.SEED = 42
+
