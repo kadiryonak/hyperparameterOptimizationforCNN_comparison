@@ -11,7 +11,8 @@ from search_algorithms.random_search import RandomSearch
 from search_algorithms.bayesian_search import BayesianOptSearch
 from models.simple_cnn import SimpleCNN
 from trainer import Trainer
-
+from search_algorithms.Artifical_Bee_Colony.abc import ABC
+from search_algorithms.Artifical_Bee_Colony.config import Config 
 
 # Reproducibility
 seed = 42
@@ -25,8 +26,8 @@ print("Using device:", device)
 
 # === CONFIG ===
 DATA_DIR = r"C:\\Users\\w\\Desktop\\Kodlama\\VsCode\\HelloWorld\\DroneDetection\\file8_lastversion"
-FITNESS_EPOCHS = 5
-BALANCED_SAMPLING = True
+FITNESS_EPOCHS = 2
+BALANCED_SAMPLING = False
 
 param_space = {
     "lr": [5e-4, 1e-3, 5e-3],
@@ -74,13 +75,30 @@ if __name__ == "__main__":
     # === GA ===
     ga = GeneticSearch(param_space, ds, device, population_size=6, generations=5, mutation_rate=0.30, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
     best_ga, _ = ga.search()
-    train_full(best_ga,10)
+
     # === Grid ===
-    #grid = GridSearch(param_space, ds, device, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
-    #best_grid, _ = grid.search()
+    grid = GridSearch(param_space, ds, device, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
+    best_grid, _ = grid.search()
 
     # === Random ===
-    #rand = RandomSearch(param_space, ds, device, n_trials=10, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
-    #best_rand, _ = rand.search()
-
-    # ===
+    rand = RandomSearch(param_space, ds, device, n_trials=10, fitness_epochs=FITNESS_EPOCHS, balanced=BALANCED_SAMPLING)
+    best_rand, _ = rand.search()
+    
+    cfg = Config()
+    # === Artificial Bee Colony ===
+    abc = ABC(
+        param_space, 
+        ds, 
+        device, 
+        colony_size=cfg.NUMBER_OF_POPULATION,
+        generations=cfg.MAXIMUM_EVALUATION, 
+        fitness_epochs=FITNESS_EPOCHS,
+        balanced=BALANCED_SAMPLING,
+        lower_bound=cfg.LOWER_BOUND,
+        upper_bound=cfg.UPPER_BOUND,
+        limit=cfg.LIMIT,
+        show_progress=cfg.SHOW_PROGRESS,
+        seed=cfg.SEED
+    )
+    best_abc, _ = abc.search()
+    train_full(best_abc, epochs=50)
