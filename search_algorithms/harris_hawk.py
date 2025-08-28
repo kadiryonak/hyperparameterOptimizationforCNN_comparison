@@ -3,24 +3,19 @@ import random
 from abc import ABC, abstractmethod
 from search_algorithms.base_search import HyperparameterSearch
 
-# ------------------------------
-# HHO IMPLEMENTATION
-# ------------------------------
+
 class HHO(HyperparameterSearch):
     def __init__(self, param_space, dataset_loader, device, pop_size=5, iterations=10, fitness_func=None):
         super().__init__(param_space, dataset_loader, device)
         self.pop_size = pop_size
         self.iterations = iterations
-        self.fitness_func = fitness_func  # CNN train function
+        self.fitness_func = fitness_func  
         self.population = self._init_population()
         self.fitness = [self.fitness_func(agent) for agent in self.population]
         best_idx = np.argmax(self.fitness)
         self.best_agent = self.population[best_idx].copy()
         self.best_fitness = self.fitness[best_idx]
 
-    # ------------------------------
-    # Population Initialization
-    # ------------------------------
     def _init_population(self):
         pop = []
         for _ in range(self.pop_size):
@@ -28,9 +23,7 @@ class HHO(HyperparameterSearch):
             pop.append(agent)
         return pop
 
-    # ------------------------------
-    # Agent Update
-    # ------------------------------
+
     def _update_agent(self, agent, E):
         q = random.random()
         r = random.random()
@@ -57,9 +50,6 @@ class HHO(HyperparameterSearch):
         
         return new_agent
 
-    # ------------------------------
-    # Search / Main Optimization
-    # ------------------------------
     def search(self):
         for t in range(self.iterations):
             E = 2 * (1 - t / self.iterations)  # Energy decreases linearly
@@ -75,3 +65,4 @@ class HHO(HyperparameterSearch):
             print(f"Iteration {t+1}, Best Fitness: {self.best_fitness}")
         
         return self.best_agent, self.best_fitness
+
